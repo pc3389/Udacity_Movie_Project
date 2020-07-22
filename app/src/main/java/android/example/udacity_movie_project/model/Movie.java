@@ -4,6 +4,7 @@ import java.util.List;
 
 public class Movie {
 
+    private String movidId;
     private String originalTitle;
     private String posterUrl;
     private String releaseDate;
@@ -12,7 +13,10 @@ public class Movie {
     private String ratingCount;
     private String overview;
 
-    public Movie(String originalTitle, String posterUrl, String releaseDate, String language, String rating, String ratingCount, String overview) {
+
+
+    public Movie(String movidId, String originalTitle, String posterUrl, String releaseDate, String language, String rating, String ratingCount, String overview) {
+        this.movidId = movidId;
         this.originalTitle = originalTitle;
         this.posterUrl = posterUrl;
         this.releaseDate = releaseDate;
@@ -20,6 +24,14 @@ public class Movie {
         this.rating = rating;
         this.ratingCount = ratingCount;
         this.overview = overview;
+    }
+
+    public String getMovidId() {
+        return movidId;
+    }
+
+    public void setMovidId(String movidId) {
+        this.movidId = movidId;
     }
 
     public String getOverview() {

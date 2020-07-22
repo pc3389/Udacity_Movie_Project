@@ -17,17 +17,17 @@ public class JsonUtils {
         JSONArray result = movieData.getJSONArray("results");
         List<Movie> m = new ArrayList<>();
         for (int i = 0; i < result.length(); i++) {
-            String originalTitle = result.getJSONObject(i).getString("original_title");
+            String movidId = result.getJSONObject(i).getString("id");
+            String originalTitle = result.getJSONObject(i).getString("title");
             String posterPath = result.getJSONObject(i).getString("poster_path");
             String releaseDate = result.getJSONObject(i).getString("release_date");
             String language = result.getJSONObject(i).getString("original_language");
             String rating = String.valueOf(result.getJSONObject(i).getDouble("vote_average"));
             String ratingCount = String.valueOf(result.getJSONObject(i).getInt("vote_count"));
             String overview = result.getJSONObject(i).getString("overview");
-            m.add(new Movie(originalTitle,posterPath,releaseDate,language,rating,ratingCount,overview));
+            m.add(new Movie(movidId, originalTitle, posterPath, releaseDate, language, rating, ratingCount, overview));
         }
-
-
         return m;
     }
+
 }

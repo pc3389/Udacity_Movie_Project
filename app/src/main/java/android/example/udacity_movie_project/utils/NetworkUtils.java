@@ -15,6 +15,7 @@ public class NetworkUtils {
     private static String popular = "popular";
     private static String topRated = "top_rated";
     private static String api_key = "api_key";
+    private static String video = "video";
 
 
     public static URL buildPublicUrl(String key) {
@@ -57,6 +58,22 @@ public class NetworkUtils {
         String url = null;
         try {
             url = new URL(builtUri.toString()).toString();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return url;
+    }
+
+    public static URL buildVideoUrl(String key, String movidId) {
+        Uri builtUri =Uri.parse(baseUrl).buildUpon()
+                .appendPath(String.valueOf(version))
+                .appendPath(movidId)
+                .appendPath(video)
+                .appendQueryParameter(api_key,key)
+                .build();
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

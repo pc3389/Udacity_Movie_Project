@@ -91,6 +91,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/thumbnail_iv"
-        tools:text="summary of the movie"/>
+        tools:text="summary of the movie"
+        android:padding="16dp"/>
 
 </RelativeLayout>

@@ -58,6 +58,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         Picasso.get().load(NetworkUtils.buildImageUrl(movieData.get(position).getPosterUrl().substring(1))).into(holder.posterImage);
         holder.originaltitle.setText(movieData.get(position).getOriginalTitle());
         context = holder.posterImage.getContext();
+        final String movidId = movieData.get(position).getMovidId();
         final String originalTitle = movieData.get(position).getOriginalTitle();
         final String releaseDate = movieData.get(position).getReleaseDate();
         final String language = movieData.get(position).getLanguage();
@@ -69,6 +70,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context,MovieDetailActivity.class);
+                intent.putExtra("movidId", movidId);
                 intent.putExtra("originalTitle",originalTitle);
                 intent.putExtra("language",language);
                 intent.putExtra("releaseDate",releaseDate);

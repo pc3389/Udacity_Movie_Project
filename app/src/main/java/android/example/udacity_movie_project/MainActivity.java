@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
 import android.example.udacity_movie_project.model.Movie;
 import android.example.udacity_movie_project.utils.JsonUtils;
 import android.example.udacity_movie_project.utils.NetworkUtils;
@@ -43,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
         api_key=this.getString(R.string.tmdb_api_key);
 
         moviePosterRecyclerview = findViewById(R.id.movie_poster_rc);
-        moviePosterRecyclerview.setHasFixedSize(true);
 
         layoutManager = new GridLayoutManager(this, 2);
         moviePosterRecyclerview.setLayoutManager(layoutManager);
