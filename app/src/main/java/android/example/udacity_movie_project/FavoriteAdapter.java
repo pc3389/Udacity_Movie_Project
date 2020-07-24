@@ -17,16 +17,16 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
+public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.FavoriteViewHolder> {
 
     private Context context;
     private List<Movie> movieData;
 
-    public static class MovieViewHolder extends RecyclerView.ViewHolder {
+    public static class FavoriteViewHolder extends RecyclerView.ViewHolder {
         private ImageView posterImage;
         private TextView originaltitle;
 
-        MovieViewHolder(View view) {
+        FavoriteViewHolder(View view) {
             super(view);
             posterImage = view.findViewById(R.id.movie_poster_iv);
             originaltitle = view.findViewById(R.id.original_title_rc);
@@ -39,19 +39,19 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         notifyDataSetChanged();
     }
 
-    public MovieAdapter(List<Movie> movieData) {
+    public FavoriteAdapter(List<Movie> movieData) {
         this.movieData = movieData;
     }
 
     @NonNull
     @Override
-    public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public FavoriteAdapter.FavoriteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_poster_item, parent, false);
-        return new MovieViewHolder(v);
+        return new FavoriteAdapter.FavoriteViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull FavoriteAdapter.FavoriteViewHolder holder, int position) {
         Picasso.get().load(NetworkUtils.buildImageUrl(movieData.get(position).getPosterUrl().substring(1))).into(holder.posterImage);
         holder.originaltitle.setText(movieData.get(position).getOriginalTitle());
         context = holder.posterImage.getContext();
@@ -84,5 +84,4 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     public int getItemCount() {
         return movieData.size();
     }
-
 }

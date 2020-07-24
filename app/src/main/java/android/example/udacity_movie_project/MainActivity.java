@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
+import android.content.Intent;
 import android.example.udacity_movie_project.model.Movie;
 import android.example.udacity_movie_project.utils.JsonUtils;
 import android.example.udacity_movie_project.utils.NetworkUtils;
@@ -34,11 +36,13 @@ public class MainActivity extends AppCompatActivity {
     private List<Movie> movieList = new ArrayList<>();
     private String data;
     private TextView mainTopTv;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        context = this;
         api_key=this.getString(R.string.tmdb_api_key);
 
         moviePosterRecyclerview = findViewById(R.id.movie_poster_rc);
@@ -109,6 +113,12 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.top_rated_menu) {
             new FetchMovieData().execute(NetworkUtils.buildTopRatedUrl(api_key));
             mainTopTv.setText("Top Rated");
+            return true;
+        }
+
+        if(id == R.id.favorite_menu) {
+            Intent intent = new Intent(context,FavoriteActivity.class);
+            context.startActivity(intent);
             return true;
         }
         return false;

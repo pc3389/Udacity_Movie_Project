@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="android.example.udacity_movie_project">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -11,6 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".FavoriteActivity"></activity>
         <activity android:name=".MovieDetailActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -19,9 +20,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <provider
             android:name=".data.MovieProvider"
-            android:authorities=".data"
+            android:authorities="com.example.android.udacity_movie_project"
             android:exported="false" />
     </application>
 

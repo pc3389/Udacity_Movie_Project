@@ -9,4 +9,7 @@
     <string name="description">Movie Poster Image</string>
     <string name="publicMenu">Public</string>
     <string name="top_rated">Top Rated</string>
+    <string name="favorite">Favorite</string>
+    <string name="save_error">Failed to save the data </string>
+    <string name="save_success">Successfully saved the data </string>
 </resources>
