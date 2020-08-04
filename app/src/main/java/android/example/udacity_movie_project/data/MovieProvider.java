@@ -20,8 +20,6 @@ public class MovieProvider extends ContentProvider {
 
     private static final int MOVIE_ID = 101;
 
-    public static final String LOG_TAG = MovieProvider.class.getSimpleName();
-
     private static final UriMatcher mUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     static {
@@ -93,27 +91,11 @@ public class MovieProvider extends ContentProvider {
         }
     }
 
-    private Uri insertMovie(Uri uri, ContentValues values){
-        String releaseDate = values.getAsString(MovieEntry.COLUMN_MOVIE_RELEASE_DATE);
-        String favorite = values.getAsString(MovieEntry.COLUMN_MOVIE_FAVORITE);
-        String language = values.getAsString(MovieEntry.COLUMN_MOVIE_LANGUAGE);
-        String poster = values.getAsString(MovieEntry.COLUMN_MOVIE_POSTER_PATH);
-        String rating = values.getAsString(MovieEntry.COLUMN_MOVIE_RATING);
-        String count = values.getAsString(MovieEntry.COLUMN_MOVIE_RATING_COUNT);
-        String id = values.getAsString(MovieEntry.COLUMN_MOVIE_ID);
-        String title = values.getAsString(MovieEntry.COLUMN_MOVIE_TITLE);
-        String video = values.getAsString(MovieEntry.COLUMN_MOVIE_VIDEO_PATH);
-        String overview = values.getAsString(MovieEntry.COLUMN_MOVIE_OVERVIEW);
-
+    private Uri insertMovie(Uri uri, ContentValues values) {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
         long insertRowId = db.insert(MovieEntry.TABLE_NAME, null, values);
 
-        if (insertRowId == -1) {
-            Toast.makeText(getContext(), R.string.save_error, Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(getContext(), R.string.save_success, Toast.LENGTH_SHORT).show();
-        }
         getContext().getContentResolver().notifyChange(uri, null);
 
         return ContentUris.withAppendedId(uri, insertRowId);
@@ -122,14 +104,57 @@ public class MovieProvider extends ContentProvider {
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String
             selection, @Nullable String[] selectionArgs) {
-        return 0;
+        final int match = mUriMatcher.match(uri);
+        switch (match) {
+            case MOVIES:
+                return updateMovie(uri, values, selection, selectionArgs);
+            case MOVIE_ID:
+                selection = MovieEntry.COLUMN_MOVIE_ID + "=?";
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+                return updateMovie(uri, values, selection, selectionArgs);
+            default:
+                throw new IllegalArgumentException("Update is not supported for " + uri);
+        }
+    }
+
+    private int updateMovie(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String
+            selection, @Nullable String[] selectionArgs) {
+        if (values.size() == 0) {
+            return 0;
+        }
+        SQLiteDatabase database = mDbHelper.getWritableDatabase();
+        int rowsUpdated = database.update(MovieEntry.TABLE_NAME, values, selection, selectionArgs);
+
+        if (rowsUpdated != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return rowsUpdated;
     }
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[]
             selectionArgs) {
-        return 0;
+        SQLiteDatabase database = mDbHelper.getWritableDatabase();
+        final int match = mUriMatcher.match(uri);
+        int rowsDeleted = 0;
+        switch (match) {
+            case MOVIES:
+                rowsDeleted = database.delete(MovieEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            case MOVIE_ID:
+                selection = MovieEntry.COLUMN_MOVIE_ID + "=?";
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+                rowsDeleted = database.delete(MovieEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            default:
+                throw new IllegalArgumentException("Deletion is not supported for the URI: " + uri);
+        }
+        if (rowsDeleted != 0) {
+            Toast.makeText(getContext(), R.string.delete_success, Toast.LENGTH_SHORT).show();
+            getContext().getContentResolver().notifyChange(uri, null);
+        } else {
+            Toast.makeText(getContext(), R.string.delete_error, Toast.LENGTH_SHORT).show();
+        }
+        return rowsDeleted;
     }
-
-
 }

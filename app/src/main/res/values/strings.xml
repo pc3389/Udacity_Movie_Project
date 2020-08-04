@@ -12,4 +12,7 @@
     <string name="favorite">Favorite</string>
     <string name="save_error">Failed to save the data </string>
     <string name="save_success">Successfully saved the data </string>
+    <string name="delete_error">Failed to delete the data </string>
+    <string name="delete_success">Successfully deleted the data </string>
+    <string name="VideoTitle">Videos</string>
 </resources>

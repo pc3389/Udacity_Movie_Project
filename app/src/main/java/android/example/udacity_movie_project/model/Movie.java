@@ -1,7 +1,5 @@
 package android.example.udacity_movie_project.model;
 
-import java.util.List;
-
 public class Movie {
 
     private String movidId;
@@ -12,10 +10,10 @@ public class Movie {
     private String rating;
     private String ratingCount;
     private String overview;
+    private int favorite;
 
 
-
-    public Movie(String movidId, String originalTitle, String posterUrl, String releaseDate, String language, String rating, String ratingCount, String overview) {
+    public Movie(String movidId, String originalTitle, String posterUrl, String releaseDate, String language, String rating, String ratingCount, String overview, int favorite) {
         this.movidId = movidId;
         this.originalTitle = originalTitle;
         this.posterUrl = posterUrl;
@@ -24,6 +22,7 @@ public class Movie {
         this.rating = rating;
         this.ratingCount = ratingCount;
         this.overview = overview;
+        this.favorite = favorite;
     }
 
     public String getMovidId() {
@@ -88,5 +87,13 @@ public class Movie {
 
     public void setRatingCount(String ratingCount) {
         this.ratingCount = ratingCount;
+    }
+
+    public int getFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(int favorite) {
+        this.favorite = favorite;
     }
 }

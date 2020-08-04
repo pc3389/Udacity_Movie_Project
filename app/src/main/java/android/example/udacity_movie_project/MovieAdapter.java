@@ -1,9 +1,12 @@
 package android.example.udacity_movie_project;
 
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
-import android.example.udacity_movie_project.model.Movie;
+import android.database.Cursor;
+import android.example.udacity_movie_project.data.MovieContract;
 import android.example.udacity_movie_project.utils.NetworkUtils;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +18,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.List;
-
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
     private Context context;
-    private List<Movie> movieData;
+    private Cursor dataCursor;
 
     public static class MovieViewHolder extends RecyclerView.ViewHolder {
         private ImageView posterImage;
@@ -33,48 +34,35 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         }
     }
 
-    public void updateUI(List<Movie> a) {
-        movieData.clear();
-        movieData.addAll(a);
-        notifyDataSetChanged();
-    }
-
-    public MovieAdapter(List<Movie> movieData) {
-        this.movieData = movieData;
+    public MovieAdapter(Context context) {
+        this.context = context;
     }
 
     @NonNull
     @Override
     public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_poster_item, parent, false);
+
         return new MovieViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
-        Picasso.get().load(NetworkUtils.buildImageUrl(movieData.get(position).getPosterUrl().substring(1))).into(holder.posterImage);
-        holder.originaltitle.setText(movieData.get(position).getOriginalTitle());
-        context = holder.posterImage.getContext();
-        final String movidId = movieData.get(position).getMovidId();
-        final String originalTitle = movieData.get(position).getOriginalTitle();
-        final String releaseDate = movieData.get(position).getReleaseDate();
-        final String language = movieData.get(position).getLanguage();
-        final String rating = movieData.get(position).getRating();
-        final String ratingCount = movieData.get(position).getRatingCount();
-        final String overview = movieData.get(position).getOverview();
-        final String posterUrl = movieData.get(position).getPosterUrl();
+        dataCursor.moveToPosition(position);
+        final int num = position;
+        final int movieId = dataCursor.getInt(dataCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_ID));
+        final String originalTitle = dataCursor.getString(dataCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_TITLE));
+
+        final String posterUrl = dataCursor.getString(dataCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_POSTER_PATH));
+        Picasso.get().load(NetworkUtils.buildImageUrl(posterUrl.substring(1))).into(holder.posterImage);
+        holder.originaltitle.setText(originalTitle);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context,MovieDetailActivity.class);
-                intent.putExtra("movidId", movidId);
-                intent.putExtra("originalTitle",originalTitle);
-                intent.putExtra("language",language);
-                intent.putExtra("releaseDate",releaseDate);
-                intent.putExtra("rating",rating);
-                intent.putExtra("ratingCount",ratingCount);
-                intent.putExtra("overview",overview);
-                intent.putExtra("posterUrl",posterUrl);
+                Intent intent = new Intent(context, MovieDetailActivity.class);
+                Uri currentMovieUri = ContentUris.withAppendedId(MovieContract.MovieEntry.CONTENT_URI, movieId);
+                intent.setData(currentMovieUri);
+
                 context.startActivity(intent);
             }
         });
@@ -82,7 +70,22 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     @Override
     public int getItemCount() {
-        return movieData.size();
+        if (dataCursor != null) {
+            return dataCursor.getCount();
+        }
+        return 0;
+    }
+
+    public Cursor swapCursor(Cursor cursor) {
+        if (dataCursor == cursor) {
+            return null;
+        }
+        Cursor prevCursor = dataCursor;
+        dataCursor = cursor;
+        if (cursor != null) {
+            notifyDataSetChanged();
+        }
+        return prevCursor;
     }
 
 }
